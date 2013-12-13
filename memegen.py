@@ -1,14 +1,15 @@
 import sqlite3
+
 from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
+
 import memegenerator
 import dao
 
-DATABASE= 'memegen.db'
+DATABASE = 'memegen.db'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-
 
 @app.route('/')
 def index():
@@ -17,10 +18,10 @@ def index():
 @app.route('/image', methods=['GET'])
 def get_images():
     db_images = dao.get_images(get_db())
-    form_data = dict()
-    images = list()
+    form_data = {}
+    images = []
     for image in db_images:
-        html_image = dict()
+        html_image = {}
         html_image['id_url'] = url_for('get_image', image_id=image[0])
         html_image['img_url'] = url_for('static',
                                         filename='images/%s' % image[1])
@@ -31,9 +32,9 @@ def get_images():
 
 @app.route('/image/<int:image_id>', methods=['GET'])
 def get_image(image_id):
-    image = dict()
+    image = {}
     image['id'] = image_id
-    image['name'] = dao.get_image_path(get_db(),image_id)
+    image['name'] = dao.get_image_path(get_db(), image_id)
     return render_template('make_meme.html', image=image)
 
 @app.route('/image', methods=['POST'])
@@ -50,10 +51,10 @@ def get_meme(meme_id):
 @app.route('/meme', methods=['GET'])
 def get_memes():
     db_images = dao.get_memes(get_db())
-    form_data = dict()
-    images = list()
+    form_data = {}
+    images = []
     for image in db_images:
-        html_image = dict()
+        html_image = []
         html_image['img_url'] = url_for('static',
                                         filename='memes/%d.png' % image[0])
         html_image['id_url'] = html_image['img_url']
