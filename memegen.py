@@ -18,23 +18,18 @@ def index():
 @app.route('/image', methods=['GET'])
 def get_images():
     db_images = dao.get_images(get_db())
-    form_data = {}
     images = []
-    for image in db_images:
-        html_image = {}
-        html_image['id_url'] = url_for('get_image', image_id=image[0])
-        html_image['img_url'] = url_for('static',
-                                        filename='images/%s' % image[1])
-        images.append(html_image)
-    form_data['images'] = images
-    form_data['to_upload'] = True
+    for image_id, filename in db_images:
+        id_url = url_for('get_image', image_id=image_id)
+        img_url = url_for('static', filename='images/%s' % filename)
+        images.append({'id_url': id_url, 'img_url': img_url})
+
+    form_data = {'images': images, 'to_upload': True}
     return render_template('grid.html', form_data=form_data)
 
 @app.route('/image/<int:image_id>', methods=['GET'])
 def get_image(image_id):
-    image = {}
-    image['id'] = image_id
-    image['name'] = dao.get_image_path(get_db(), image_id)
+    image = {'id': image_id, 'name': dao.get_image_path(get_db(), image_id)}
     return render_template('make_meme.html', image=image)
 
 @app.route('/image', methods=['POST'])
@@ -51,31 +46,24 @@ def get_meme(meme_id):
 @app.route('/meme', methods=['GET'])
 def get_memes():
     db_images = dao.get_memes(get_db())
-    form_data = {}
     images = []
     for image in db_images:
-        html_image = {}
-        html_image['img_url'] = url_for('static',
-                                        filename='memes/%d.png' % image[0])
-        html_image['id_url'] = html_image['img_url']
-        images.append(html_image)
+        img_url = id_url = url_for('static', filename='memes/%d.png' % image[0])
+        images.append({'img_url': img_url, 'id_url': id_url})
 
-    form_data['images'] = images
-    form_data['to_upload'] = False
+    form_data = {'images': images, 'to_upload': False}
     return render_template('grid.html', form_data=form_data)
 
 @app.route('/meme', methods=['POST'])
 def post_meme():
-    meme_id = dao.create_meme(get_db(),
-                              int(request.form['image']),
-                              request.form['top'],
-                              request.form['bottom'])
-    image_name = dao.get_image_path(get_db(),
-                                    int(request.form['image']))
-    memegenerator.gen_meme(image_name,
-                           request.form['top'],
-                           request.form['bottom'],
-                           meme_id)
+    image_id = int(request.form['image'])
+    top = request.form['top']
+    bottom = request.form['bottom']
+
+    meme_id = dao.create_meme(get_db(), image_id, top, bottom)
+    image_name = dao.get_image_path(get_db(), image_id)
+    memegenerator.gen_meme(image_name, top, bottom, meme_id)
+
     return redirect(url_for('static', filename='memes/%d.png' % meme_id))
 
 @app.teardown_appcontext

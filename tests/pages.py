@@ -1,5 +1,5 @@
 import requests
-from urllib2 import urlopen
+from urllib2 import urlopen, URLError
 from urlparse import urlsplit
 
 from intests import (Test, run_all, assert_equal, assert_response_ok,
@@ -75,4 +75,12 @@ def post_meme():
     response = requests.post(BASE + 'meme', post_params)
     assert_response_ok(response.status_code, response.reason)
 
-run_all()
+if __name__ == '__main__':
+    try:
+        urlopen(BASE)
+    except URLError as e:
+        reason = e.reason
+        if reason.errno == 111:
+            print 'Is the server running?'
+    else:
+        run_all()
