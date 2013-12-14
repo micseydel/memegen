@@ -47,8 +47,8 @@ def get_meme(meme_id):
 def get_memes():
     db_images = dao.get_memes(get_db())
     images = []
-    for image in db_images:
-        img_url = id_url = url_for('static', filename='memes/%d.png' % image[0])
+    for image_id, _, _, _ in db_images:
+        img_url = id_url = url_for('static', filename='memes/%d.png' % image_id)
         images.append({'img_url': img_url, 'id_url': id_url})
 
     form_data = {'images': images, 'to_upload': False}
