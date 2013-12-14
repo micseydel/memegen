@@ -54,7 +54,7 @@ def get_memes():
     form_data = {}
     images = []
     for image in db_images:
-        html_image = []
+        html_image = {}
         html_image['img_url'] = url_for('static',
                                         filename='memes/%d.png' % image[0])
         html_image['id_url'] = html_image['img_url']
@@ -94,5 +94,9 @@ def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
 
 if __name__ == '__main__':
-    app.debug = True
+    import sys
+    if '-d' in sys.argv or '--debug' in sys.argv:
+        print 'Running in debug mode'
+        app.debug = True
+    print 'Server is available externally'
     app.run("0.0.0.0")
