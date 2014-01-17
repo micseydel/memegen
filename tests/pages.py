@@ -3,7 +3,7 @@ from urllib2 import urlopen, URLError
 from urlparse import urlsplit
 
 from intests import Test, run_all, assert_equal, assert_response_ok, \
-    assert_untested, get_timestamp
+    get_timestamp
 
 BASE = 'http://127.0.0.1:5000/'
 

@@ -30,7 +30,6 @@ def get_images():
 @app.route('/image/<int:image_id>', methods=['GET'])
 def get_image(image_id):
     image = {'id': image_id, 'name': dao.get_image_path(get_db(), image_id)}
-    from pprint import pprint; pprint(image)
     return render_template('make_meme.html', image=image)
 
 

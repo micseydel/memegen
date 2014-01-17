@@ -1,13 +1,14 @@
-import PIL
 from PIL import ImageFont
 from PIL import Image
 from PIL import ImageDraw
 import os
 
 WHITE = (0, 0, 0)
-BLACK = (255,255,255)
+BLACK = (255, 255, 255)
 
-font_path = "static/fonts/Impact.ttf"
+FONT_PATH = "static/fonts/Impact.ttf"
+
+
 def gen_meme(image_name, top, bottom, meme_id):
     top = top.upper()
     bottom = bottom.upper()
@@ -18,13 +19,13 @@ def gen_meme(image_name, top, bottom, meme_id):
 
     # find biggest font size that works
     fontSize = imageSize[1] / 5
-    font = ImageFont.truetype(font_path, fontSize)
+    font = ImageFont.truetype(FONT_PATH, fontSize)
     topTextSize = font.getsize(top)
     bottomTextSize = font.getsize(bottom)
     while topTextSize[0] > imageSize[0] - 20 or \
             bottomTextSize[0] > imageSize[0] - 20:
         fontSize = fontSize - 1
-        font = ImageFont.truetype(font_path, fontSize)
+        font = ImageFont.truetype(FONT_PATH, fontSize)
         topTextSize = font.getsize(top)
         bottomTextSize = font.getsize(bottom)
 
@@ -44,9 +45,9 @@ def gen_meme(image_name, top, bottom, meme_id):
     for x in xrange(-outlineRange, outlineRange + 1):
         for y in xrange(-outlineRange, outlineRange + 1):
             draw.text((topTextPosition[0] + x, topTextPosition[1] + y),
-                top, WHITE, font=font)
+                      top, WHITE, font=font)
             draw.text((bottomTextPosition[0] + x, bottomTextPosition[1] + y),
-                bottom, WHITE, font=font)
+                      bottom, WHITE, font=font)
 
     draw.text(topTextPosition, top, BLACK, font=font)
     draw.text(bottomTextPosition, bottom, BLACK, font=font)

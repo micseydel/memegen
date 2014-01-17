@@ -31,6 +31,7 @@ def assert_response_ok(status_code, reason=None):
         error = "Response: {0}, Reason: {1}".format(status_code, reason)
         raise AssertionFailure(error)
 
+
 def assert_untested(msg=None):
     'simple function to force AssertionFailure'
     raise AssertionFailure("There is no test yet." if msg is None else msg)
