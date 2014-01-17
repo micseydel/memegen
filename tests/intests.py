@@ -1,17 +1,20 @@
 import sys
 from time import strftime
-from traceback import print_tb, format_tb
 
 EXPLANATION_FORMAT = "  {0}\n  error: {1}\n"
 EQ_FORMAT = "{0} was not equal to {1}"
 
+
 class AssertionFailure(Exception):
     pass
 
+
 class Test:
     tests = []
+
     def __init__(self, f):
         self.tests.append(f)
+
 
 def assert_equal(*args):
     'assert that all arguments are equal'
@@ -22,16 +25,20 @@ def assert_equal(*args):
             raise AssertionFailure(EQ_FORMAT.format(obj, prev))
         prev = obj
 
+
 def assert_response_ok(status_code, reason=None):
     if status_code < 200 or status_code >= 300:
         error = "Response: {0}, Reason: {1}".format(status_code, reason)
+        raise AssertionFailure(error)
 
 def assert_untested(msg=None):
     'simple function to force AssertionFailure'
     raise AssertionFailure("There is no test yet." if msg is None else msg)
 
+
 def get_timestamp():
     return strftime('%d/%b/%Y %H:%M:%S')
+
 
 def run_all():
     for arg in sys.argv:
@@ -60,5 +67,5 @@ def run_all():
     if failures:
         print 'Failures:'
 
-    for doc, error in failures:
-        print EXPLANATION_FORMAT.format(doc, error)
+        for doc, error in failures:
+            print EXPLANATION_FORMAT.format(doc, error)
