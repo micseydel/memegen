@@ -6,7 +6,8 @@ In House Meme Generator
 This was designed to be drop and use as much as possible, but my changes aren't keeping with that. I may move back in that direction later, but for now it's aimed toward being office-specific.
 
 To Run:
-```$ python injokes.py
+```bash
+python injokes.py
 ```
 
 Features
@@ -31,7 +32,8 @@ Dependencies
 ============
 All the dependencies can be installed via pip
 
-```sudo apt-get install python-pip python-dev build-essential libjpeg8-dev
+```bash
+sudo apt-get install python-pip python-dev build-essential libjpeg8-dev
 sudo pip install pillow
 sudo pip install flask
 sudo pip install Flask-PyMongo
