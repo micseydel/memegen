@@ -2,7 +2,7 @@ from datetime import datetime
 
 from bson.objectid import ObjectId
 
-from memetext import MemeText
+from objects import MemeText
 
 ID = "_id"
 IMAGE_ID = "image_id"

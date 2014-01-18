@@ -5,7 +5,7 @@ from flask.ext.pymongo import PyMongo
 
 import dao
 import memegenerator
-from memetext import MemeText, Transform
+from objects import MemeText, Transform
 
 app = Flask(__name__)
 app.config.from_object(__name__)
