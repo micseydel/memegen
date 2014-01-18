@@ -3,7 +3,7 @@ from datetime import datetime
 
 from pymongo import MongoClient
 
-from memetext import MemeText, Transform
+from objects import MemeText, Transform
 
 TEMPLATES_LOCATION = "static/images"
 MEMES_LOCATION = "static/memes"
