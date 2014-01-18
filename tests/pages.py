@@ -14,12 +14,14 @@ SAMPLE_IMAGE = "sample.png"
 SUCCESS = True
 
 IMAGE_ID_PAT = re.compile("<a href=/image/([0-9a-f]{24})>")
+IMAGE_PATH_PAT = re.compile('/(static/images/.+\\.jpg)')
+MEME_PATH_PAT = re.compile('/(static/memes/.+\\.png)')
 
 
 @Test
 def index():
     """
-    Test the except page. Except a redirect to /image.
+    Test the index page. Except a redirect to /image.
     """
     response = urlopen(BASE)
     assert_response_ok(response.code)
@@ -33,6 +35,10 @@ def get_images():
     """
     response = urlopen(BASE + "image")
     assert_response_ok(response.code)
+    image_paths = IMAGE_PATH_PAT.findall(response.read())
+    for image_path in image_paths:
+        response = urlopen(BASE + image_path)
+        assert_response_ok(response.code)
 
 
 @Test
@@ -57,19 +63,9 @@ def post_images():
 
 
 @Test
-def get_memes():
-    """
-    Test show all existing memes.
-    """
-    response = urlopen(BASE + "meme")
-    assert_response_ok(response.code)
-
-
-@Test
 def post_meme():
     """
     Test creating a new meme.
-    TODO: fix
     """
     images_page = urlopen(BASE + "image").read()
     image_id = IMAGE_ID_PAT.findall(images_page)[0]
@@ -82,6 +78,26 @@ def post_meme():
 
     response = requests.post(BASE + "meme", post_params)
     assert_response_ok(response.status_code, response.reason)
+
+
+@Test
+def get_memes():
+    """
+    Test show all existing memes.
+    """
+    memes_response = urlopen(BASE + "meme")
+    assert_response_ok(memes_response.code)
+    # uncommenting the following code causes terrible, terrible hanging
+    # meme_paths = MEME_PATH_PAT.findall(memes_response.read())
+    #   should investigate later, but screw it for now.
+    # assert meme_paths
+    # for meme_path in set(meme_paths):
+    #     print BASE + meme_path
+    #     try:
+    #         img_response = urlopen(BASE + meme_path)
+    #     except KeyboardInterrupt:
+    #         print 'ugh', meme_path
+    #     assert_response_ok(img_response.code)
 
 
 if __name__ == "__main__":

@@ -22,7 +22,7 @@ def index():
 @app.route("/image", methods=["GET"])
 def get_images():
     images = []
-    for image in mongo.db.images.find():
+    for image in dao.get_images(mongo.db):
         id_url = url_for("get_image", _id=image["_id"])
         img_url = url_for("static", filename="images/%s" % image["filename"])
         images.append({"id_url": id_url, "img_url": img_url})
@@ -43,7 +43,7 @@ def post_images():
     img.save("static/images/" + img.filename)
 
     title = os.path.splitext(img.filename)[0]
-    img_id = mongo.db.images.insert({"filename": img.filename, "title": title})
+    img_id = dao.create_image(mongo.db, img.filename, title)
 
     return redirect(url_for("get_image", _id=img_id))
 
@@ -66,7 +66,7 @@ def post_meme():
     top = request.form["top"]
     bottom = request.form["bottom"]
 
-    meme_id = dao.create_meme(mongo.db, image_id, MemeText(top, bottom))
+    meme_id = dao.create_meme(mongo.db, image_id, MemeText(top, bottom), None)
 
     image_name = dao.get_image_filename(mongo.db, image_id)
     memegenerator.gen_meme(image_name, top, bottom, meme_id)

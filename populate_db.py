@@ -30,7 +30,7 @@ memes.remove()
 for filename in os.listdir(MEMES_LOCATION):
     meme = {
         "filename": filename,
-        "title": os.path.splitext(filename)[0],
+        "_id": os.path.splitext(filename)[0],
         "meme_text": MemeText("top", "bottom"),
         "creator_id": 0,
         "creation_time": datetime.utcnow()

@@ -1,9 +1,17 @@
+from datetime import datetime
+
 from bson.objectid import ObjectId
 
+from memetext import MemeText
+
 ID = "_id"
-FILENAME = "filename"
+IMAGE_ID = "image_id"
 IMAGE = "image"
+FILENAME = "filename"
 MEME_TEXT = "meme_text"
+TITLE = "title"
+CREATOR_ID = "creator_id"
+CREATION_TIME = "creation_time"
 
 
 def get_images(db):
@@ -17,11 +25,22 @@ def get_image_filename(db, _id):
     return result[0][FILENAME] if result else None
 
 
+def create_image(db, filename, title):
+    return db.images.insert({FILENAME: filename, TITLE: title})
+
+
 def get_memes(db):
     "get ALL THE MEMES"
     return db.memes.find()
 
 
-def create_meme(db, image_id, meme_text):
+def create_meme(db, image_id, meme_text, creator_id):
     "returns meme id of the meme created in the database"
-    return db.memes.insert({IMAGE: image_id, MEME_TEXT: meme_text})
+    meme = {
+        IMAGE_ID: image_id,
+        MEME_TEXT: MemeText("top", "bottom"),
+        CREATOR_ID: creator_id,
+        CREATION_TIME: datetime.utcnow()
+    }
+
+    return db.memes.insert(meme)
