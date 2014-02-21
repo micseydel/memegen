@@ -5,7 +5,7 @@ from pymongo import MongoClient
 
 from objects import MemeText, Transform
 
-TEMPLATES_LOCATION = "static/images"
+TEMPLATES_LOCATION = "static/templates"
 MEMES_LOCATION = "static/memes"
 
 client = MongoClient()
@@ -13,18 +13,18 @@ db = client.injokes
 db.add_son_manipulator(Transform())
 
 # collections
-images = db.images
+templates = db.templates
 memes = db.memes
 users = db.users
 
-images.remove()  # wipe existing database
+templates.remove()  # wipe existing database
 for filename in os.listdir(TEMPLATES_LOCATION):
-    image = {
+    template = {
         "filename": filename,
         "title": os.path.splitext(filename)[0],
     }
 
-    images.insert(image)
+    templates.insert(template)
 
 memes.remove()
 for filename in os.listdir(MEMES_LOCATION):

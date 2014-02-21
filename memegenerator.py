@@ -12,7 +12,7 @@ FONT_PATH = "static/fonts/Impact.ttf"
 def gen_meme(image_name, top, bottom, meme_id):
     top = top.upper()
     bottom = bottom.upper()
-    image_path = os.path.join('static/images', image_name)
+    image_path = os.path.join('static/templates', image_name)
 
     img = Image.open(image_path)
     imageSize = img.size

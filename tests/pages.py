@@ -9,46 +9,46 @@ from intests import Test, run_all, assert_equal, assert_response_ok, \
 
 BASE = "http://127.0.0.1:5000/"
 
-SAMPLE_IMAGE = "sample.png"
+SAMPLE_template = "sample.png"
 
 SUCCESS = True
 
-IMAGE_ID_PAT = re.compile("<a href=/image/([0-9a-f]{24})>")
-IMAGE_PATH_PAT = re.compile('/(static/images/.+\\.jpg)')
+template_ID_PAT = re.compile("<a href=/template/([0-9a-f]{24})>")
+template_PATH_PAT = re.compile('/(static/templates/.+\\.jpg)')
 MEME_PATH_PAT = re.compile('/(static/memes/.+\\.png)')
 
 
 @Test
-def get_images():
+def get_templates():
     """
     Test the main page.
     """
     response = urlopen(BASE)
     assert_response_ok(response.code)
-    image_paths = IMAGE_PATH_PAT.findall(response.read())
-    for image_path in image_paths:
-        response = urlopen(BASE + image_path)
+    template_paths = template_PATH_PAT.findall(response.read())
+    for template_path in template_paths:
+        response = urlopen(BASE + template_path)
         assert_response_ok(response.code)
 
 
 @Test
-def get_image():
+def get_template():
     """
     Test a submission page.
     """
-    images_page = urlopen(BASE).read()
-    image_id = IMAGE_ID_PAT.findall(images_page)[0]
-    response = urlopen(BASE + "image/" + image_id)
+    templates_page = urlopen(BASE).read()
+    template_id = template_ID_PAT.findall(templates_page)[0]
+    response = urlopen(BASE + "template/" + template_id)
     assert_response_ok(response.code)
 
 
 @Test
-def post_images():
+def post_templates():
     """
-    Test uploading an image.
+    Test uploading an template.
     """
-    files = {"image": open(SAMPLE_IMAGE, "rb")}
-    response = requests.post(BASE + "image", files=files)
+    files = {"template": open(SAMPLE_template, "rb")}
+    response = requests.post(BASE + "template", files=files)
     assert_response_ok(response.status_code, response.reason)
 
 
@@ -57,11 +57,11 @@ def post_meme():
     """
     Test creating a new meme.
     """
-    images_page = urlopen(BASE).read()
-    image_id = IMAGE_ID_PAT.findall(images_page)[0]
+    templates_page = urlopen(BASE).read()
+    template_id = template_ID_PAT.findall(templates_page)[0]
 
     post_params = {
-        "image": image_id,
+        "template": template_id,
         "top": "whoa a timestamp",
         "bottom": get_timestamp()
     }

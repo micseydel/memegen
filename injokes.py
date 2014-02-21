@@ -15,56 +15,56 @@ with app.app_context():
 
 
 @app.route("/")
-def get_images():
-    images = []
-    for image in dao.get_images(mongo.db):
-        id_url = url_for("get_image", _id=image["_id"])
-        img_url = url_for("static", filename="images/%s" % image["filename"])
-        images.append({"id_url": id_url, "img_url": img_url})
+def home():
+    templates = []
+    for template in dao.get_templates(mongo.db):
+        id_url = url_for("get_template", _id=template["_id"])
+        img_url = url_for("static", filename="templates/%s" % template["filename"])
+        templates.append({"id_url": id_url, "img_url": img_url})
 
-    form_data = {"images": images, "to_upload": True}
+    form_data = {"templates": templates, "to_upload": True}
     return render_template("home_page.html", form_data=form_data)
 
 
-@app.route("/image/<_id>", methods=["GET"])
-def get_image(_id):
-    image = {"id": _id, "name": dao.get_image_filename(mongo.db, _id)}
-    return render_template("make_meme.html", image=image)
+@app.route("/template/<_id>", methods=["GET"])
+def get_template(_id):
+    template = {"id": _id, "name": dao.get_template_filename(mongo.db, _id)}
+    return render_template("make_meme.html", template=template)
 
 
-@app.route("/image", methods=["POST"])
-def post_images():
-    img = request.files["image"]
-    img.save("static/images/" + img.filename)
+@app.route("/template", methods=["POST"])
+def post_templates():
+    img = request.files["template"]
+    img.save("static/templates/" + img.filename)
 
     title = os.path.splitext(img.filename)[0]
-    img_id = dao.create_image(mongo.db, img.filename, title)
+    img_id = dao.create_template(mongo.db, img.filename, title)
 
-    return redirect(url_for("get_image", _id=img_id))
+    return redirect(url_for("get_template", _id=img_id))
 
 
 @app.route("/memes", methods=["GET"])
 def get_memes():
-    images = []
-    for image in dao.get_memes(mongo.db):
-        path = "memes/%s.png" % image["_id"]
+    templates = []
+    for template in dao.get_memes(mongo.db):
+        path = "memes/%s.png" % template["_id"]
         img_url = id_url = url_for("static", filename=path)
-        images.append({"img_url": img_url, "id_url": id_url})
+        templates.append({"img_url": img_url, "id_url": id_url})
 
-    form_data = {"images": reversed(images), "to_upload": False}
+    form_data = {"templates": reversed(templates), "to_upload": False}
     return render_template("memes.html", form_data=form_data)
 
 
 @app.route("/post_meme", methods=["POST"])
 def post_meme():
-    image_id = request.form["image"]
+    template_id = request.form["template"]
     top = request.form["top"]
     bottom = request.form["bottom"]
 
-    meme_id = dao.create_meme(mongo.db, image_id, MemeText(top, bottom), None)
+    meme_id = dao.create_meme(mongo.db, template_id, MemeText(top, bottom), None)
 
-    image_name = dao.get_image_filename(mongo.db, image_id)
-    memegenerator.gen_meme(image_name, top, bottom, meme_id)
+    template_name = dao.get_template_filename(mongo.db, template_id)
+    memegenerator.gen_meme(template_name, top, bottom, meme_id)
 
     return redirect(url_for("get_memes"))
 

@@ -1,7 +1,7 @@
 {% block body %}
-    {% for image in form_data.images %}
-        <a href={{image.id_url}}>
-            <img src='{{image.img_url}}' width="256" height="256">
+    {% for template in form_data.templates %}
+        <a href={{template.id_url}}>
+            <img src='{{template.img_url}}' width="256" height="256">
         </a>
     {% endfor %}
 {% endblock %}
