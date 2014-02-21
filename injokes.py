@@ -15,11 +15,6 @@ with app.app_context():
 
 
 @app.route("/")
-def index():
-    return redirect(url_for("get_images"))
-
-
-@app.route("/image", methods=["GET"])
 def get_images():
     images = []
     for image in dao.get_images(mongo.db):
@@ -28,7 +23,7 @@ def get_images():
         images.append({"id_url": id_url, "img_url": img_url})
 
     form_data = {"images": images, "to_upload": True}
-    return render_template("grid.html", form_data=form_data)
+    return render_template("home_page.html", form_data=form_data)
 
 
 @app.route("/image/<_id>", methods=["GET"])
@@ -48,7 +43,7 @@ def post_images():
     return redirect(url_for("get_image", _id=img_id))
 
 
-@app.route("/meme", methods=["GET"])
+@app.route("/memes", methods=["GET"])
 def get_memes():
     images = []
     for image in dao.get_memes(mongo.db):
@@ -56,11 +51,11 @@ def get_memes():
         img_url = id_url = url_for("static", filename=path)
         images.append({"img_url": img_url, "id_url": id_url})
 
-    form_data = {"images": images, "to_upload": False}
-    return render_template("grid.html", form_data=form_data)
+    form_data = {"images": reversed(images), "to_upload": False}
+    return render_template("memes.html", form_data=form_data)
 
 
-@app.route("/meme", methods=["POST"])
+@app.route("/post_meme", methods=["POST"])
 def post_meme():
     image_id = request.form["image"]
     top = request.form["top"]
@@ -71,7 +66,7 @@ def post_meme():
     image_name = dao.get_image_filename(mongo.db, image_id)
     memegenerator.gen_meme(image_name, top, bottom, meme_id)
 
-    return redirect(url_for("static", filename="memes/%s.png" % meme_id))
+    return redirect(url_for("get_memes"))
 
 
 def main():
