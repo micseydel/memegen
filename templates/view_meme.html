@@ -1,0 +1,8 @@
+<title>{{ "%s - %s" % (template.name, meme.meme_text) }}</title>
+<img src={{ url_for('static', filename='memes/%s.png' % meme._id)}} width="512" height="512">
+<br>
+<a href="/template/{{template._id}}">Create new meme from same template</a>
+<br>
+<a href="/">Return home</a>
+<br>
+<a href="/memes">Back to memes</a>

@@ -1,18 +1,21 @@
+import os
+
 from PIL import ImageFont
 from PIL import Image
 from PIL import ImageDraw
-import os
 
 WHITE = (0, 0, 0)
 BLACK = (255, 255, 255)
 
 FONT_PATH = "static/fonts/Impact.ttf"
+TEMPLATES_PATH = "static/templates"
+MEME_PATH_FORMAT = "static/memes/%s.png"
 
 
 def gen_meme(image_name, top, bottom, meme_id):
     top = top.upper()
     bottom = bottom.upper()
-    image_path = os.path.join('static/templates', image_name)
+    image_path = os.path.join(TEMPLATES_PATH, image_name)
 
     img = Image.open(image_path)
     imageSize = img.size
@@ -52,4 +55,4 @@ def gen_meme(image_name, top, bottom, meme_id):
     draw.text(topTextPosition, top, BLACK, font=font)
     draw.text(bottomTextPosition, bottom, BLACK, font=font)
 
-    img.save("static/memes/%s.png" % meme_id)
+    img.save(MEME_PATH_FORMAT % meme_id)
