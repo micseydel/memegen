@@ -18,9 +18,10 @@ with app.app_context():
 def home():
     templates = []
     for template in dao.get_templates(mongo.db):
-        link = url_for("get_template", _id=template["_id"])
-        location = url_for("static", filename="templates/%s" % template["filename"])
-        templates.append({"location": location, "link": link})
+        filename = "templates/%s" % template["filename"]
+        location = url_for("static", filename=filename)
+        templates.append({"location": location,
+                         "link": url_for("get_template", _id=template["_id"])})
 
     form_data = {"images": templates, "to_upload": True}
     return render_template("home_page.html", form_data=form_data)
@@ -63,7 +64,10 @@ def post_meme():
     bottom = request.form["bottom"]
 
     #TODO: create id is what None here is supposed to be
-    meme_id = dao.create_meme(mongo.db, template_id, MemeText(top, bottom), None)
+    meme_id = dao.create_meme(mongo.db,
+                              template_id,
+                              MemeText(top, bottom),
+                              None)
 
     template_name = dao.get_template_filename(mongo.db, template_id)
     memegenerator.gen_meme(template_name, top, bottom, meme_id)
@@ -78,6 +82,7 @@ def view_meme(_id):
     #TODO
     #user = dao.get_user(mongo.db, template["creator_id"])
     return render_template("view_meme.html", meme=meme, template=template)
+
 
 def main():
     import sys

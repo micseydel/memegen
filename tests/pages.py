@@ -1,11 +1,9 @@
 import re
 from urllib2 import urlopen, URLError
-from urlparse import urlsplit
 
 import requests
 
-from intests import Test, run_all, assert_equal, assert_response_ok, \
-    get_timestamp
+from intests import Test, run_all, assert_response_ok, get_timestamp
 
 BASE = "http://127.0.0.1:5000/"
 
